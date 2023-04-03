@@ -1,0 +1,7 @@
+{
+  "name": "Fortify",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}
