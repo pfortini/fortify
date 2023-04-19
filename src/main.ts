@@ -8,6 +8,7 @@ import { AppComponent } from './app/app.component';
 import { environment } from './environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 
 if (environment.production)
   enableProdMode();
@@ -15,7 +16,7 @@ if (environment.production)
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    importProvidersFrom(IonicModule.forRoot({}), HttpClientModule),
+    importProvidersFrom(IonicModule.forRoot({}), HttpClientModule, SweetAlert2Module.forRoot()),
     provideRouter(routes)
   ]
 });
