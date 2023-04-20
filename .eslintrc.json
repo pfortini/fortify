@@ -3,10 +3,10 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["standard"],
+  "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
-    "ecmaVersion": 12,
+    "ecmaVersion": "latest",
     "sourceType": "module"
   },
   "plugins": ["@typescript-eslint"],
@@ -15,10 +15,11 @@
     "curly": ["error", "multi-or-nest"],
     "space-before-function-paren": "off",
     "eqeqeq": "off",
-    "quotes": "error",
+    "quotes": ["error", "single"],
     "object-curly-newline": ["error", { "multiline": true }],
     "no-throw-literal": "off",
     "new-cap": "off",
-    "no-useless-constructor": "off"
+    "no-useless-constructor": "off",
+    "@typescript-eslint/no-explicit-any": "off"
   }
 }
