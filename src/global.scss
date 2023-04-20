@@ -25,25 +25,128 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+/** root properties **/
 :root {
-  --ion-font-family: 'Montserrat' !important;
+  --ion-font-family: "Montserrat" !important;
+
+  ion-title {
+    color: var(--ion-color-primary-contrast)
+  }
 }
 
-.perfil-img-header {
+/** class for modal wrapper **/
+.fit-modal-wrapper {
+  --height: fit-content;
+}
+
+
+/** display utils **/
+.display-grid {
+  display: grid;
+}
+
+.display-flex {
+  display: flex;
+}
+
+.display-block {
+  display: block;
+}
+
+/** to fix widths **/
+.col-fit-content {
+  max-width: fit-content;
+}
+
+.full-width {
+  width: 100%;
+}
+
+/** things shapes **/
+.round {
   border-radius: 50%;
+}
+
+.square-50 {
+  height: 50px;
+  width: 50px;
+}
+
+.square-75 {
   height: 75px;
   width: 75px;
 }
 
-.spotifort-title {
+.square-150 {
+  height: 150px;
+  width: 150px;
+}
+
+/** margin utils **/
+.margin-start {
+  margin-left: 12px !important;
+}
+
+.margin-end {
+  margin-right: 12px !important;
+}
+
+.no-padding-start {
+  padding-left: 0px !important;
+}
+
+
+/** align and justify utils **/
+.align-content-center {
+  align-content: center;
+}
+
+.align-content-end {
+  align-content: end;
+}
+
+.justify-self-center {
+  justify-self: center;
+}
+
+/** about overflow and scroll **/
+.scrollable {
+  overflow: scroll;
+}
+
+.overflow-hidden {
+  overflow: hidden;
+}
+
+/** for big playlist cover **/
+.playlist-cover-big {
+  height: 200px;
+  width: 200px;
   display: grid;
+  overflow: hidden;
+  align-content: center;
   justify-content: center;
 }
 
-.margin-top-10 {
-  margin-top: 10px;
+/** for scrollable cards **/
+.scrollable-card {
+  height: 50vh;
+  overflow: scroll
 }
 
-.fit-modal-wrapper {
-	--height: fit-content;
+/** for fab div **/
+.fab-height {
+  height: 50px;
+}
+
+.success-button-text {
+  color: var(--ion-color-success-contrast) !important;
+}
+
+.warning-button-text {
+  color: var(--ion-color-warning-contrast) !important;
+}
+
+.danger-button-text {
+  color: var(--ion-color-danger-contrast) !important;
 }
