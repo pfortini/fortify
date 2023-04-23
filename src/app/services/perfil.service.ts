@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { sleep } from '../tools';
 import { LoginService } from './login.service';
+import { StatusModalComponent } from '../components/status-modal/status-modal.component';
+import { SharedModule } from '../modules/shared/shared.module';
 
 @Injectable({
   providedIn: 'root'
@@ -10,9 +12,12 @@ export class PerfilService {
   public perfil;
 
   private _isReady = false;
+  private statusModal: StatusModalComponent
 
-  constructor(private httpService: HttpService, private loginService: LoginService) {
+  constructor(private httpService: HttpService, private loginService: LoginService, private sharedModule: SharedModule) {
     this.init();
+    this.statusModal = this.sharedModule.statusModalComponent();
+
   }
 
   private async init() {
@@ -21,9 +26,12 @@ export class PerfilService {
     try {
       await this.me();
     } catch (e: any) {
-      if (e.status == 401 && e.error.error.message == 'The access token expired') {
+      if (e.status == 401 && e.message == 'The access token expired') {
         await this.loginService.refreshAccessToken();
-        return await this.init()
+        return await this.init();
+      } else {
+        await this.statusModal.warning('Algo deu errado...', 'Recarregue a página ou tente novamente mais tarde');
+        console.log(e);
       }
     }
 
@@ -52,8 +60,8 @@ export class PerfilService {
       else playlistsLiked.push(playlist);
     });
 
-    for (let i = 0; i < playlistsOwned.length; i += 4) gridPlaylistsOwned.push(playlistsOwned.slice(i, i + 4))
-    for (let i = 0; i < playlistsLiked.length; i += 4) gridPlaylistsLiked.push(playlistsLiked.slice(i, i + 4))
+    for (let i = 0; i < playlistsOwned.length; i += 5) gridPlaylistsOwned.push(playlistsOwned.slice(i, i + 5));
+    for (let i = 0; i < playlistsLiked.length; i += 5) gridPlaylistsLiked.push(playlistsLiked.slice(i, i + 5));
 
     this.perfil.playlists = { owned: gridPlaylistsOwned, liked: gridPlaylistsLiked };
     return this.perfil.playlists;

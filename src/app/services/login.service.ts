@@ -17,7 +17,8 @@ export class LoginService {
     scope: [
       'user-read-private','user-read-email',
       'playlist-read-private','playlist-read-collaborative',
-      'playlist-modify-public','playlist-modify-private'
+      'playlist-modify-public','playlist-modify-private',
+      'ugc-image-upload'
     ].join(' '),
     redirect_uri: environment.redirectUri,
     state: generateRandomString(16)
@@ -50,25 +51,21 @@ export class LoginService {
     if (!this.accessCode) throw 'no access code';
     if (this.accessToken) return this.accessToken.access_token;
 
-    try {
-      const accessToken = await this.httpService.postUrlEncoded(
-        'https://accounts.spotify.com/api/token',
-        {
-          grant_type: 'authorization_code',
-          code: this.accessCode,
-          redirect_uri: environment.redirectUri
-        },
-        { Authorization: 'Basic ' + btoa(environment.clientId + ':' + environment.clientSecret) }
-      );
+    const accessToken = await this.httpService.postUrlEncoded(
+      'https://accounts.spotify.com/api/token',
+      {
+        grant_type: 'authorization_code',
+        code: this.accessCode,
+        redirect_uri: environment.redirectUri
+      },
+      { Authorization: 'Basic ' + btoa(environment.clientId + ':' + environment.clientSecret) }
+    );
 
-      this.accessToken = accessToken;
-      await this.jsonService.writeJSON('access_token.json', accessToken);
-      this.httpService.setKey(this.accessToken.access_token);
+    this.accessToken = accessToken;
+    await this.jsonService.writeJSON('access_token.json', accessToken);
+    this.httpService.setKey(this.accessToken.access_token);
 
-      return this.accessToken;
-    } catch (e) {
-      console.log(e);
-    }
+    return this.accessToken;
   }
 
   async refreshAccessToken() {
@@ -93,6 +90,7 @@ export class LoginService {
   }
 
   async setAccessCode(code: string) {
-    await this.jsonService.writeJSON('access_code.json', code)
+    this.accessCode = code;
+    await this.jsonService.writeJSON('access_code.json', code);
   }
 }
