@@ -9,6 +9,7 @@ import { environment } from './environments/environment';
 import { HttpClientModule } from '@angular/common/http';
 import { defineCustomElements } from '@ionic/pwa-elements/loader';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
+import { SharedModule } from './app/modules/shared/shared.module';
 
 if (environment.production)
   enableProdMode();
@@ -16,7 +17,7 @@ if (environment.production)
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    importProvidersFrom(IonicModule.forRoot({}), HttpClientModule, SweetAlert2Module.forRoot()),
+    importProvidersFrom(IonicModule.forRoot({}), HttpClientModule, SweetAlert2Module.forRoot(), SharedModule),
     provideRouter(routes)
   ]
 });
