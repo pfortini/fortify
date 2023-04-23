@@ -1,0 +1,44 @@
+.playlist-cover-img {
+  height: 230px;
+  max-width: 232px;
+}
+
+.subtitle {
+  padding-left: 20px;
+  padding-right: 20px;
+  width: fit-content;
+}
+
+.tracks-grid {
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 30px;
+}
+
+.tracks-grid-header {
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  margin-bottom: 20px;
+  margin-top: 10px;
+}
+
+.number-col {
+  max-width: 50px;
+}
+
+.album-col {
+  padding-left: 60px;
+}
+
+.album-header-col {
+  margin-left: 5px;
+}
+
+.cover-col {
+  max-width: 60px;
+}
+
+.cover-margins {
+  margin-left: 5px;
+  margin-right: 5px;
+}
