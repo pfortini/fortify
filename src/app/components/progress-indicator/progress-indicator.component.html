@@ -1,0 +1,7 @@
+<ion-card *ngIf="!loading">
+  <ion-card-header class="display-grid">
+    <ion-spinner name="crescent" class="ion-margin-vertical justify-self-center"></ion-spinner>
+    <ion-title class="ion-margin-vertical ion-text-center">{{ message }}</ion-title>
+    <ion-progress-bar *ngIf="showProgress" class="ion-margin-vertical" [value]="progress"></ion-progress-bar>
+  </ion-card-header>
+</ion-card>

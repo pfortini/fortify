@@ -1,0 +1,21 @@
+<ion-card *ngIf="!loading">
+  <ion-card-header>
+    <ion-title text-wrap class="ion-margin-vertical">Selecione as playlists que deseja apagar:</ion-title>
+  </ion-card-header>
+  <ion-card-content class="scrollable-card">
+    <ion-item lines="none" *ngFor="let playlist of playlists">
+      <div class="cover-margins square-75 align-content-center ion-justify-content-center display-grid overflow-hidden">
+        <img src="{{ playlist.images[0]?.url }}" />
+      </div>
+      <ion-checkbox (ionChange)="removeList()" class="margin-end" labelPlacement="start" [(ngModel)]="playlist.toRemove">{{ playlist.name }}</ion-checkbox>
+    </ion-item>
+  </ion-card-content>
+  <div class="fab-height">
+    <ion-fab vertical="bottom" horizontal="end">
+      <ion-fab-button color="danger" class="ion-margin-end" (click)="delete()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+</ion-card>
+<app-progress-indicator *ngIf="loading" [message]="'Deletando playlists...'" [showProgress]="true" [progress]="progress"></app-progress-indicator>

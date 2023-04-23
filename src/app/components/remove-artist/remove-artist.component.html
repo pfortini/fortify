@@ -1,0 +1,50 @@
+<ion-card *ngIf="!loading && state != 'done'">
+    <ion-card-header>
+    <ion-title class="ion-text-start ion-margin-vertical">Selecione artistas para remover da playlist:</ion-title>
+</ion-card-header>
+<ion-card-content class="scrollable-card">
+  <ion-item lines="none">
+      <ion-grid>
+        <ion-row *ngFor="let artist of artists">
+          <ion-col class="align-content-center display-grid artist-cover-col">
+            <img class="round square-50" src="{{ artist.images[0]?.url }}">
+          </ion-col>
+          <ion-col>
+            <ion-checkbox labelPlacement="start" (ionChange)="updateDelete()" [(ngModel)]="artist.toDelete">{{ artist?.name }}</ion-checkbox>
+          </ion-col>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+  </ion-card-content>
+  <div class="fab-height">
+    <ion-fab vertical="bottom" horizontal="end" *ngIf="artistsToDelete?.length > 0">
+      <ion-fab-button color="danger" class="ion-margin-end" (click)="delete()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+</ion-card>
+<app-progress-indicator *ngIf="loading && state == 'init'" [message]="'Carregando informações da playlist...'"></app-progress-indicator>
+<app-progress-indicator *ngIf="loading && state == 'deleting'" [message]="'Removendo artistas da playlist...'" [showProgress]="true" [progress]="progress"></app-progress-indicator>
+<ion-card *ngIf="state == 'done'">
+  <ion-card-content>
+    <ion-item lines="none" class="display-grid ion-justify-content-center">
+      <div class="svg-container">
+        <svg class="ft-green-tick" xmlns="http://www.w3.org/2000/svg" height="75" width="75" viewBox="0 0 48 48" aria-hidden="true">
+            <circle class="circle" fill="#5bb543" cx="24" cy="24" r="22"/>
+            <path class="tick" fill="none" stroke="#FFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" d="M14 27l5.917 4.917L34 17"/>
+        </svg>
+    </div>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-title class="ion-text-center">Artistas removidos da playlist com sucesso!</ion-title>
+    </ion-item>
+    <ion-item lines="none">
+      <ion-buttons slot="end">
+        <ion-button shape="round" fill="solid" color="success" (click)="dismiss()">
+          <ion-label>Fechar</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-item>
+  </ion-card-content>
+</ion-card>

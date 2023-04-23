@@ -1,0 +1,55 @@
+<ion-card *ngIf="!loading">
+  <ion-card-header>
+    <ion-title class="ion-margin-top">Criar Nova Playlist</ion-title>
+  </ion-card-header>
+  <ion-card-content>
+    <ion-grid class="display-flex">
+      <ion-col class="col-fit-content display-block">
+        <div class="img-div">
+          <img *ngIf="!coverImage" class="cover-img-div" src="../../../assets/icon/playlist_cover.png" (click)="uploadCoverImage()">
+          <img *ngIf="coverImage" class="cover-img-div" src="{{ coverImage }}" (click)="uploadCoverImage()">
+        </div>
+      </ion-col>
+      <ion-col class="full-width display-block">
+        <ion-row class="ion-margin-bottom">
+          <div class="height-50 full-width">
+            <ion-item>
+              <ion-input [(ngModel)]="title" label="Nome da Playlist" label-placement="stacked"></ion-input>
+            </ion-item>
+          </div>
+        </ion-row>
+        <ion-row>
+          <div class="height-150 full-width">
+            <ion-item>
+              <ion-textarea
+              [(ngModel)]="description"
+              [autoGrow]="true"
+              label="Entre com uma descrição (opcional)"
+              label-placement="stacked">
+            </ion-textarea>
+            </ion-item>
+          </div>
+        </ion-row>
+      </ion-col>
+    </ion-grid>
+    <ion-item lines="none" class="col-fit-content">
+      <ion-checkbox (ionChange)="safetyToggle()" [(ngModel)]="private" labelPlacement="end">Playlist privada</ion-checkbox>
+    </ion-item>
+    <ion-item lines="none" class="col-fit-content">
+      <ion-checkbox (ionChange)="safetyToggle()" [disabled]="!private" [(ngModel)]="collaborative" labelPlacement="end">Playlist colaborativa</ion-checkbox>
+    </ion-item>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-button shape="round" (click)="close('', 'cancel')">
+          <ion-label>Cancelar</ion-label>
+        </ion-button>
+      </ion-buttons>
+      <ion-buttons slot="end">
+        <ion-button shape="round" (click)="createPlaylist()">
+          <ion-label>Salvar</ion-label>
+        </ion-button>
+      </ion-buttons>
+    </ion-toolbar>
+  </ion-card-content>
+</ion-card>
+<app-progress-indicator *ngIf="loading" [message]="'Criando playlist...'" [showProgress]="true" [progress]="progress"></app-progress-indicator>
