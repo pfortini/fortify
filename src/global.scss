@@ -32,6 +32,10 @@
   ion-title {
     color: var(--ion-color-primary-contrast)
   }
+
+  ion-label {
+    color: var(--ion-color-primary-contrast)
+  }
 }
 
 /** class for modal wrapper **/
@@ -91,8 +95,29 @@
   margin-right: 12px !important;
 }
 
+.margin-vertical {
+  margin-top: 12px !important;
+  margin-bottom: 12px !important;
+}
+
+.margin-bottom {
+  margin-bottom: 12px !important;
+}
+
+.margin-top {
+  margin-top: 12px !important;
+}
+
+.big-margin-top {
+  margin-top: 24px !important;
+}
+
 .no-padding-start {
   padding-left: 0px !important;
+}
+
+.no-padding-bottom {
+  padding-bottom: 0px !important;
 }
 
 
@@ -103,6 +128,10 @@
 
 .align-content-end {
   align-content: end;
+}
+
+.align-content-start {
+  align-content: start;
 }
 
 .justify-self-center {
@@ -118,7 +147,7 @@
   overflow: hidden;
 }
 
-/** for big playlist cover **/
+/** for big playlist classes **/
 .playlist-cover-big {
   height: 200px;
   width: 200px;
@@ -128,15 +157,48 @@
   justify-content: center;
 }
 
+.big-title {
+  font-size: 60px;
+}
+
+.title-mobile {
+  font-size: 20px !important;
+  font-weight: 500 !important;
+  line-height: normal !important;
+}
+
 /** for scrollable cards **/
 .scrollable-card {
-  height: 50vh;
+  max-height: 50vh;
   overflow: scroll
 }
 
 /** for fab div **/
 .fab-height {
   height: 50px;
+}
+
+/** for checkbox headache **/
+.checkbox-img-div {
+  float: left;
+  height: 50px;
+  width: 50px;
+  min-width: 50px;
+  max-width: 50px;
+  overflow: hidden;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  margin-right: 12px;
+}
+
+.checkbox-label-div {
+  white-space: normal;
+  max-width: calc(100% - 62px);
+  float: right;
+  height: 50px;
+  align-content: center;
+  display: grid;
 }
 
 .success-button-text {
