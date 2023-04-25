@@ -7,19 +7,6 @@ import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class HttpService {
-  public spotifyLoginUrl = 'https://accounts.spotify.com/authorize?' + queryString({
-    response_type: 'code',
-    client_id: environment.clientId,
-    scope: [
-      'user-read-private','user-read-email',
-      'playlist-read-private','playlist-read-collaborative',
-      'playlist-modify-public','playlist-modify-private',
-      'ugc-image-upload'
-    ].join(' '),
-    redirect_uri: environment.redirectUri,
-    state: generateRandomString(16)
-  });
-
   public key = '';
 
   constructor(private http: HttpClient, private router: Router) {}

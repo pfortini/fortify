@@ -11,19 +11,6 @@ export class LoginService {
 
   private _isReady = false;
 
-  public spotifyLoginUrl = 'https://accounts.spotify.com/authorize?' + queryString({
-    response_type: 'code',
-    client_id: environment.clientId,
-    scope: [
-      'user-read-private','user-read-email',
-      'playlist-read-private','playlist-read-collaborative',
-      'playlist-modify-public','playlist-modify-private',
-      'ugc-image-upload'
-    ].join(' '),
-    redirect_uri: environment.redirectUri,
-    state: generateRandomString(16)
-  });
-
   constructor(private jsonService: JsonService, private httpService: HttpService) {
     this.init();
   }
@@ -92,5 +79,37 @@ export class LoginService {
     this.accessCode = code;
     await this.jsonService.writeJSON('access_code.json', code);
     await this.init();
+  }
+
+  async login() {
+    const loginState = generateRandomString(16);
+
+    const spotifyLoginUrl = 'https://accounts.spotify.com/authorize?' + queryString({
+      response_type: 'code',
+      client_id: environment.clientId,
+      scope: [
+        'user-read-private','user-read-email',
+        'playlist-read-private','playlist-read-collaborative',
+        'playlist-modify-public','playlist-modify-private',
+        'ugc-image-upload'
+      ].join(' '),
+      redirect_uri: environment.redirectUri,
+      state: loginState
+    });
+
+    await this.jsonService.writeJSON('login_state.json', loginState);
+
+    return window.location.assign(spotifyLoginUrl);
+  }
+
+  async logout() {
+    this.accessCode = null;
+    this.accessToken = null;
+
+    await this.jsonService.deleteJSON('access_code.json');
+    await this.jsonService.deleteJSON('access_token.json');
+    await this.jsonService.deleteJSON('login_state.json');
+
+    this.httpService.setKey('');
   }
 }

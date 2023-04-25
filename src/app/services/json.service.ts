@@ -22,4 +22,12 @@ export class JsonService {
       }
     }
   }
+
+  async deleteJSON(fileName: string) {
+    try {
+      return await this.fsService.deleteFile(fileName);
+    } catch (e) {
+      if (e != 'Error: File does not exist' && e != 'Error: File does not exist.') throw e;
+    }
+  }
 }
