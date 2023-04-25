@@ -33,7 +33,7 @@
     "ionicons": "^7.0.0",
     "qs": "^6.11.1",
     "rxjs": "~7.5.0",
-    "sweetalert2": "^11.4.8",
+    "sweetalert2": "11.4.8",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },
@@ -48,7 +48,7 @@
     "@angular/compiler": "^15.0.0",
     "@angular/compiler-cli": "^15.0.0",
     "@angular/language-service": "^15.0.0",
-    "@capacitor/cli": "4.7.3",
+    "@capacitor/cli": "^5.0.0-beta.3",
     "@ionic/angular-toolkit": "^9.0.0",
     "@types/jasmine": "~4.0.0",
     "@types/node": "^12.11.1",
