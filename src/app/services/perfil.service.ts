@@ -50,6 +50,15 @@ export class PerfilService {
 
   async playlists() {
     const playlists = await this.httpService.get('https://api.spotify.com/v1/me/playlists');
+
+    console.log(playlists);
+
+    while (playlists.next) {
+      const morePlaylists = await this.httpService.get(playlists.next);
+      playlists.items.push(...morePlaylists.items);
+      playlists.next = morePlaylists.next;
+    }
+
     const playlistsOwned: any = [];
     const playlistsLiked: any = [];
     const gridPlaylistsOwned: any = [];
