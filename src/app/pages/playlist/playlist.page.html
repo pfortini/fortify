@@ -148,7 +148,7 @@
         <ion-icon name="warning-outline" slot="start" color="warning"></ion-icon>
         <ion-label>Essa playlist ainda não tem músicas</ion-label>
       </ion-item>
-      <ion-item lines="full" *ngIf="tracks?.length > 0">
+      <ion-item lines="none" *ngIf="tracks?.length > 0">
         <ion-label>AÇÕES DA PLAYLIST</ion-label>
       </ion-item>
       <ion-item lines="none" *ngIf="!owned && !playlist?.collaborative">
@@ -237,7 +237,7 @@
           </ion-col>
         </ion-grid>
       </ion-item>
-      <ion-item lines="full" *ngIf="playlist?.tracks.total > 0">
+      <ion-item lines="none" *ngIf="playlist?.tracks.total > 0">
         <ion-label>MÚSICAS</ion-label>
       </ion-item>
       <ion-item lines="none" *ngIf="playlist?.tracks.total > 0">

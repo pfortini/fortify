@@ -43,10 +43,12 @@ export class ShowDuplicatesComponent  implements OnInit {
     Object.values(this.allTracks.reduce((acc, track, i) => {
       track.track.position = i;
 
-      if (acc[track.track.name]) {
-        acc[track.track.name].tracks.push(track.track);
-        acc[track.track.name].count++;
-      } else acc[track.track.name] = { tracks: [track.track], count: 1 };
+      const trackName = track.track.name + '|' + track.track.artists.map(artist => artist.name).join('|');
+
+      if (acc[trackName]) {
+        acc[trackName].tracks.push(track.track);
+        acc[trackName].count++;
+      } else acc[trackName] = { tracks: [track.track], count: 1 };
 
       return acc;
     }, {})).forEach((trackObj: any) => {
