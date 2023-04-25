@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { IonicModule } from '@ionic/angular';
 
 @Component({
@@ -9,15 +9,14 @@ import { IonicModule } from '@ionic/angular';
   styleUrls: ['./progress-indicator.component.scss'],
   standalone: true
 })
-export class ProgressIndicatorComponent  implements OnInit {
+export class ProgressIndicatorComponent {
   @Input() message: string | undefined;
   @Input() progress = 0;
   @Input() showProgress = false;
+  @Input() fullscreen = false;
+  @Input() spinnerStyle = 'crescent';
 
   public loading = false;
 
-  constructor() { }
-
-  ngOnInit() {}
-
+  constructor() {}
 }

@@ -1,6 +1,6 @@
-<ion-card *ngIf="!loading">
+<ion-card *ngIf="!loading" [ngClass]="fullscreen ? 'display-grid align-content-center full-height' : ''">
   <ion-card-header class="display-grid">
-    <ion-spinner name="crescent" class="ion-margin-vertical justify-self-center"></ion-spinner>
+    <ion-spinner [name]="spinnerStyle" class="ion-margin-vertical justify-self-center"></ion-spinner>
     <ion-label class="title-mobile ion-margin-vertical ion-text-center" text-wrap>{{ message }}</ion-label>
     <ion-progress-bar *ngIf="showProgress" class="ion-margin-vertical" [value]="progress"></ion-progress-bar>
   </ion-card-header>
