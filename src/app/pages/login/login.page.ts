@@ -17,19 +17,21 @@ export class LoginPage{
   constructor(private router: Router, private loginService: LoginService) {}
 
   async ionViewWillEnter() {
-    await this.loginService.isReady();
     const params = new URL(window.location.toString()).searchParams;
     const forceNew = Boolean(params.get('forceNew'));
 
-    if (!forceNew && this.loginService.accessCode && this.loginService.accessToken) { await this.router.navigate(['/home']); return; }
-
+    if (!forceNew && this.loginService.accessCode && this.loginService.accessToken)
+      return await this.router.navigate(['/home']);
 
     const code = params.get('code');
     if (code) {
       this.loginService.setAccessCode(code);
       params.delete('code');
       window.history.replaceState({}, document.title, '/login?' + params.toString());
-    } else return window.location.assign(this.loginService.spotifyLoginUrl);
+    } else {
+      // return window.location.assign(this.loginService.spotifyLoginUrl);
+      return console.log('what');
+    }
 
     await this.loginService.getAccessToken();
     await this.router.navigate(['/home']);

@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { PlaylistService } from 'src/app/services/playlist.service';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
+import { FsService } from 'src/app/services/storage.service';
 
 @Component({
   imports: [IonicModule, CommonModule, FormsModule, ProgressIndicatorComponent],
@@ -20,7 +21,7 @@ export class RemovePlaylistComponent  implements OnInit {
 
   private toRemove: any = [];
 
-  constructor(private playlistService: PlaylistService, private modalController: ModalController) { }
+  constructor(private playlistService: PlaylistService, private modalController: ModalController, public fsService: FsService) { }
 
   ngOnInit() {
     const playlists: any = [];
@@ -29,7 +30,7 @@ export class RemovePlaylistComponent  implements OnInit {
   }
 
   public removeList() {
-    this.toRemove = this.playlists.filter(playlist => playlist.toRemove)
+    this.toRemove = this.playlists.filter(playlist => playlist.toRemove);
   }
 
   public async delete() {
@@ -37,9 +38,9 @@ export class RemovePlaylistComponent  implements OnInit {
 
     let i = 0;
     await Promise.all(this.toRemove.map(async playlist => {
-      await this.playlistService.deletePlaylist(playlist.id)
+      await this.playlistService.deletePlaylist(playlist.id);
 
-      i++
+      i++;
       this.progress = i / this.toRemove.length;
     }));
 

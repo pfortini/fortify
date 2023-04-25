@@ -9,6 +9,8 @@ import { RemoveArtistComponent } from 'src/app/components/remove-artist/remove-a
 import { ShowDuplicatesComponent } from 'src/app/components/show-duplicates/show-duplicates.component';
 import { StatusModalComponent } from 'src/app/components/status-modal/status-modal.component';
 import { SearchService } from 'src/app/services/search.service';
+import { RemoveAlbumComponent } from 'src/app/components/remove-album/remove-album.component';
+import { FsService } from 'src/app/services/storage.service';
 
 @Component({
   imports: [IonicModule, CommonModule, FormsModule],
@@ -24,10 +26,11 @@ export class PlaylistPage implements OnInit {
   public tracks: any = [];
   public artists: any = [];
   public loading = false;
+  public owned = false;
 
   constructor(private perfilService: PerfilService, private playlistService: PlaylistService,
     private modalController: ModalController, private statusModal: StatusModalComponent,
-    private searchService: SearchService
+    private searchService: SearchService, public fsService: FsService
   ) { }
 
   async ngOnInit() {
@@ -35,15 +38,28 @@ export class PlaylistPage implements OnInit {
   }
 
   private async init() {
+    this.loading = true;
+
     await this.perfilService.isReady();
 
     this.id = new URL(window.location.toString()).searchParams.get('id');
 
     const playlist = await this.playlistService.getPlaylist(this.id);
     this.playlist = playlist;
+    this.owned = this.playlist.owner.id == this.perfilService.perfil.id;
+    this.playlist.description = this.htmlDecode(this.playlist.description);
 
     this.tracks = [];
     this.tracks.push(...this.playlist.tracks.items);
+
+    this.loading = false;
+
+    await this.openRemoveAlbumModal();
+  }
+
+  public htmlDecode(str: string) {
+    const doc = new DOMParser().parseFromString(str, 'text/html');
+    return doc.documentElement.textContent;
   }
 
   public convertMinutes(ms: number) {
@@ -82,7 +98,7 @@ export class PlaylistPage implements OnInit {
     await modal.present();
     const dismissData = await modal.onDidDismiss();
     if (dismissData.role == 'done') {
-      await this.statusModal.success('Músicas adicionadas à playlist com sucesso!');
+      await this.statusModal.success('Músicas adicionadas com sucesso!');
       await this.init();
     }
   }
@@ -97,7 +113,22 @@ export class PlaylistPage implements OnInit {
     await modal.present();
     const dismissData = await modal.onDidDismiss();
     if (dismissData.role == 'done') {
-      await this.statusModal.success('Músicas removidas da playlist com sucesso!');
+      await this.statusModal.success('Músicas removidas com sucesso!');
+      await this.init();
+    }
+  }
+
+  public async openRemoveAlbumModal() {
+    const modal = await this.modalController.create({
+      component: RemoveAlbumComponent,
+      componentProps: { playlistId: this.id, snapshotId: this.playlist.snapshot_id },
+      cssClass: 'fit-modal-wrapper'
+    });
+
+    await modal.present();
+    const dismissData = await modal.onDidDismiss();
+    if (dismissData.role == 'done') {
+      await this.statusModal.success('Músicas removidas com sucesso!');
       await this.init();
     }
   }
@@ -116,5 +147,13 @@ export class PlaylistPage implements OnInit {
       await this.statusModal.success('Músicas removidas com sucesso!');
       await this.init();
     }
+  }
+
+  public async openIncorporateModal() {
+    await this.statusModal.info('Função em desenvolvimento...');
+  }
+
+  public async openDislikeModal() {
+    await this.statusModal.info('Função em desenvolvimento...');
   }
 }

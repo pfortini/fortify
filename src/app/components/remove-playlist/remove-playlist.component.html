@@ -1,4 +1,24 @@
-<ion-card *ngIf="!loading">
+<ion-card *ngIf="!loading" [ngClass]="{'ion-hide': fsService.platform != 'mobile'}">
+  <ion-card-header>
+    <ion-label text-wrap class="title-mobile ion-margin-vertical">Selecione as playlists que deseja apagar:</ion-label>
+  </ion-card-header>
+  <ion-card-content class="scrollable-card">
+    <ion-item lines="none" *ngFor="let playlist of playlists" class="margin-bottom">
+      <ion-checkbox (ionChange)="removeList()" [(ngModel)]="playlist.toRemove">
+        <div class="checkbox-img-div"><img src="{{ playlist.images[0]?.url }}" /></div>
+        <div class="checkbox-label-div">{{ playlist?.name }}</div>
+      </ion-checkbox>
+    </ion-item>
+  </ion-card-content>
+  <div class="fab-height">
+    <ion-fab vertical="bottom" horizontal="end">
+      <ion-fab-button color="danger" class="ion-margin-end" (click)="delete()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+</ion-card>
+<ion-card *ngIf="!loading" [ngClass]="{'ion-hide': fsService.platform != 'desktop'}">
   <ion-card-header>
     <ion-title text-wrap class="ion-margin-vertical">Selecione as playlists que deseja apagar:</ion-title>
   </ion-card-header>
@@ -7,7 +27,9 @@
       <div class="cover-margins square-75 align-content-center ion-justify-content-center display-grid overflow-hidden">
         <img src="{{ playlist.images[0]?.url }}" />
       </div>
-      <ion-checkbox (ionChange)="removeList()" class="margin-end" labelPlacement="start" [(ngModel)]="playlist.toRemove">{{ playlist.name }}</ion-checkbox>
+      <ion-checkbox (ionChange)="removeList()" class="margin-end" labelPlacement="start" [(ngModel)]="playlist.toRemove">
+        <ion-label text-wrap>{{ playlist?.name }}</ion-label>
+      </ion-checkbox>
     </ion-item>
   </ion-card-content>
   <div class="fab-height">

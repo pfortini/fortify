@@ -1,0 +1,24 @@
+<app-progress-indicator *ngIf="loading && state == 'init'" [message]="'Carregando informações da playlist...'"></app-progress-indicator>
+
+<ion-card *ngIf="!loading && state != 'done'">
+  <ion-card-header>
+    <ion-label class="title-mobile ion-text-start ion-margin-vertical">Selecione álbuns para remover da playlist:</ion-label>
+  </ion-card-header>
+  <ion-card-content class="scrollable-card">
+    <ion-item lines="none" *ngFor="let album of albums" class="margin-bottom">
+      <ion-checkbox (ionChange)="updateDelete()" [(ngModel)]="album.toDelete">
+        <div class="checkbox-img-div"><img src="{{ album.images[0]?.url }}" /></div>
+        <div class="checkbox-label-div">{{ album?.name }}</div>
+      </ion-checkbox>
+    </ion-item>
+  </ion-card-content>
+  <div class="fab-height">
+    <ion-fab vertical="bottom" horizontal="end" *ngIf="toDelete?.length > 0">
+      <ion-fab-button color="danger" class="ion-margin-end" (click)="delete()">
+        <ion-icon name="trash-outline"></ion-icon>
+      </ion-fab-button>
+    </ion-fab>
+  </div>
+</ion-card>
+
+<app-progress-indicator *ngIf="loading && state == 'deleting'" [message]="'Removendo álbuns da playlist...'" [showProgress]="true" [progress]="progress"></app-progress-indicator>

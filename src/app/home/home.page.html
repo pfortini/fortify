@@ -1,10 +1,94 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title class="display-grid ion-justify-content-center"> Spotifort - Página Inicial </ion-title>
+    <ion-title [ngClass]="{'ion-hide': fsService.platform != 'desktop'}" class="display-grid ion-justify-content-center"> Spotifort - Página Inicial </ion-title>
+    <ion-title [ngClass]="{'ion-hide': fsService.platform != 'mobile'}" class="display-grid ion-justify-content-center"> Spotifort</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content [ngClass]="{'ion-hide': fsService.platform != 'mobile'}">
+  <ion-card *ngIf="loginService.accessToken">
+    <ion-card-header>
+      <ion-item lines="none" class="ion-margin-bottom ion-no-padding">
+        <ion-grid>
+          <ion-row>
+            <ion-col class="col-fit-content">
+              <img class="square-75 round" src="{{ perfilService.perfil?.images[0]?.url }}" />
+            </ion-col>
+            <ion-col class="display-grid ion-align-items-center">
+              <ion-title>Olá, {{ perfilService.perfil?.display_name }}.</ion-title>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-buttons class="full-width display-grid">
+          <ion-button shape="round" fill="solid" color="success" (click)="openNewPlaylistModal()" class="margin-bottom">
+            <ion-icon slot="start" name="add-outline"></ion-icon>
+            <ion-label>Criar Playlist</ion-label>
+          </ion-button>
+          <ion-button shape="round" fill="solid" color="danger" (click)="openDeletePlaylistsModal()" class="margin-bottom">
+            <ion-icon slot="start" name="trash-outline"></ion-icon>
+            <ion-label>Apagar Playlist</ion-label>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label class="mobile-label">SUAS PLAYLISTS</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-grid>
+          <ion-row *ngFor="let playlist of perfilService.perfil?.playlists?._owned" (click)="goToPlaylist(playlist.id)">
+            <ion-col class="col-fit-content display-grid align-content-center">
+              <div class="square-75 overflow-hidden align-content-center ion-justify-content-center display-grid">
+                <img src="{{ playlist.images[0]?.url }}" />
+              </div>
+            </ion-col>
+            <ion-col class="display-grid align-content-center">
+              <ion-label text-wrap>{{ playlist.name }}</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-label class="mobile-label">PLAYLISTS CURTIDAS</ion-label>
+      </ion-item>
+      <ion-item lines="none">
+        <ion-grid>
+          <ion-row *ngFor="let playlist of perfilService.perfil?.playlists?._liked">
+            <ion-col class="col-fit-content display-grid align-content-center">
+              <div class="square-75 overflow-hidden align-content-center ion-justify-content-center display-grid">
+                <img src="{{ playlist.images[0]?.url }}" />
+              </div>
+            </ion-col>
+            <ion-col class="display-grid align-content-center">
+              <ion-label text-wrap>{{ playlist.name }}</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+  <ion-card *ngIf="!loginService.accessToken">
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-label class="ion-text-center" text-wrap>
+          Utilize o botão abaixo para fazer login utilizando uma conta Spotify
+        </ion-label>
+      </ion-item>
+      <ion-item lines="none" class="display-grid ion-justify-content-center">
+        <ion-buttons>
+          <ion-button shape="round" color="success" fill="solid" (click)="redirectLogin()">
+            <ion-icon name="person-outline" slot="start"></ion-icon>
+            <ion-label>Login</ion-label>
+          </ion-button>
+        </ion-buttons>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-content [ngClass]="{'ion-hide': fsService.platform != 'desktop'}">
   <ion-card *ngIf="loginService.accessToken">
     <ion-card-header>
       <ion-item lines="none" class="ion-margin-bottom ion-no-padding">
@@ -88,7 +172,7 @@
       </ion-item>
       <ion-item lines="none" class="display-grid ion-justify-content-center">
         <ion-buttons>
-          <ion-button shape="round" color="success" fill="solid" href="/login">
+          <ion-button shape="round" color="success" fill="solid" (click)="redirectLogin()">
             <ion-icon name="person-outline" slot="start"></ion-icon>
             <ion-label>Login</ion-label>
           </ion-button>

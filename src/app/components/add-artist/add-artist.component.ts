@@ -8,6 +8,8 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
 import { StatusModalComponent } from '../status-modal/status-modal.component';
 import { ArtistService } from 'src/app/services/artist.service';
 import { AlbumService } from 'src/app/services/album.service';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { FsService } from 'src/app/services/storage.service';
 
 @Component({
   imports: [CommonModule, IonicModule, FormsModule, ProgressIndicatorComponent],
@@ -25,6 +27,7 @@ export class AddArtistComponent  implements OnInit {
   public artistArray: any = [];
   public filteredArtists: any = [];
   public selectedArtists: any = [];
+  public selectedArtistsMobile: any = [];
 
   public slide = 0;
   public subslide = 0;
@@ -47,10 +50,14 @@ export class AddArtistComponent  implements OnInit {
     'album': -2
   };
 
+  private statusModal: StatusModalComponent
+
   constructor(private searchService: SearchService, private artistService: ArtistService,
     private playlistService: PlaylistService, private modalController: ModalController,
-    private statusModal: StatusModalComponent, private albumService: AlbumService
-  ) {}
+    private sharedModule: SharedModule, private albumService: AlbumService, public fsService: FsService
+  ) {
+    this.statusModal = this.sharedModule.statusModalComponent();
+  }
 
   async ngOnInit() {
     await this.searchService.isReady();
@@ -77,6 +84,11 @@ export class AddArtistComponent  implements OnInit {
       else this.selectedArtists.push([a]);
     } else this.selectedArtists.push([a]);
 
+    if (this.selectedArtistsMobile.length > 0) {
+      if (this.selectedArtistsMobile[this.selectedArtistsMobile.length - 1].length < 3) this.selectedArtistsMobile[this.selectedArtistsMobile.length - 1].push(a);
+      else this.selectedArtistsMobile.push([a]);
+    } else this.selectedArtistsMobile.push([a]);
+
     this.filterArtists();
   }
 
@@ -92,12 +104,15 @@ export class AddArtistComponent  implements OnInit {
   private rearrangeSelected() {
     const result: any = [];
     const ordered: any = [];
+    const orderedMobile: any = [];
 
     this.selectedArtists.forEach((chunk: any) => result.push(...chunk));
 
     for (let i = 0; i < result.length; i += 5) ordered.push(result.slice(i, i + 5));
+    for (let i = 0; i < result.length; i += 3) orderedMobile.push(result.slice(i, i + 3));
 
     this.selectedArtists = ordered;
+    this.selectedArtistsMobile = orderedMobile;
   }
 
   public async loadMoreArtists(e: any) {
@@ -137,7 +152,10 @@ export class AddArtistComponent  implements OnInit {
       await Promise.all(artists.map(async (artist, i)=> {
         const topTracks = await this.artistService.getTopTracks(artist.name, this.qty);
 
-        tracksToAdd.push(...topTracks);
+        console.log(topTracks);
+        console.log(this.qty);
+
+        tracksToAdd.push(...topTracks.items);
 
         this.progress = (i + 1) / artists.length;
       }));
@@ -199,7 +217,7 @@ export class AddArtistComponent  implements OnInit {
       } else if (!this.albumStep && this.qty != this.qtyMap['album']) {
         this.slide++;
         await this.addArtists();
-        this.slide++;
+        await this.modalController.dismiss('', 'done');
       } else if (this.albumStep) {
         if (this.subslide + 1 < this.artistArray.length) this.subslide++;
         else {

@@ -7,6 +7,7 @@ import { Router } from '@angular/router';
 import { NewPlaylistComponent } from '../components/new-playlist/new-playlist.component';
 import { RemovePlaylistComponent } from '../components/remove-playlist/remove-playlist.component';
 import { StatusModalComponent } from '../components/status-modal/status-modal.component';
+import { FsService } from '../services/storage.service';
 
 @Component({
   imports: [IonicModule, CommonModule],
@@ -19,7 +20,7 @@ import { StatusModalComponent } from '../components/status-modal/status-modal.co
 export class HomePage {
   constructor(
       public loginService: LoginService, public perfilService: PerfilService, private router: Router,
-      private modalController: ModalController, private statusModal: StatusModalComponent
+      private modalController: ModalController, private statusModal: StatusModalComponent, public fsService: FsService
     ) {}
 
   async ionViewWillEnter() {
@@ -43,6 +44,9 @@ export class HomePage {
       await this.statusModal.success('Playlist criada com sucesso!');
       await this.perfilService.me();
       await this.goToPlaylist(r.data.id);
+    } else if (r.role == 'done_with_errors') {
+      await this.perfilService.me();
+      await this.goToPlaylist(r.data.id);
     }
   }
 
@@ -59,5 +63,9 @@ export class HomePage {
       await this.statusModal.success('Playlists deletadas com sucesso!');
       await this.perfilService.me();
     }
+  }
+
+  public async redirectLogin() {
+    return window.location.assign(this.loginService.spotifyLoginUrl);
   }
 }

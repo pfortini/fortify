@@ -4,6 +4,8 @@
 
 .selected-artist-toolbar {
   min-height: 70px;
+  max-height: 120px;
+  overflow: scroll;
 }
 
 .album-div {
@@ -20,47 +22,4 @@
   color: red;
   height: 16px;
   width: 16px;
-}
-
-@supports (animation: grow 0.5s cubic-bezier(0.25, 0.25, 0.25, 1) forwards) {
-  .tick {
-    stroke-opacity: 0;
-    stroke-dasharray: 29px;
-    stroke-dashoffset: 29px;
-    animation: draw 0.5s cubic-bezier(0.25, 0.25, 0.25, 1) forwards;
-    animation-delay: 0.6s;
-  }
-
-  .circle {
-    fill-opacity: 0;
-    stroke: #219a00;
-    stroke-width: 16px;
-    transform-origin: center;
-    transform: scale(0);
-    animation: grow 1s cubic-bezier(0.25, 0.25, 0.25, 1.25) forwards;
-  }
-}
-
-@keyframes grow {
-  60% {
-    transform: scale(0.8);
-    stroke-width: 4px;
-    fill-opacity: 0;
-  }
-  100% {
-    transform: scale(0.9);
-    stroke-width: 8px;
-    fill-opacity: 1;
-    fill: #219a00;
-  }
-}
-
-@keyframes draw {
-  0%,
-  100% {
-    stroke-opacity: 1;
-  }
-  100% {
-    stroke-dashoffset: 0;
-  }
 }

@@ -13,15 +13,15 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
   standalone: true
 })
 export class RemoveArtistComponent  implements OnInit {
-  @Input() playlistId: string = '';
-  @Input() snapshotId: string = '';
+  @Input() playlistId = '';
+  @Input() snapshotId = '';
 
   public artists: any = [];
   public allTracks: any = [];
   public artistsToDelete: any = [];
 
   public loading = false;
-  public state: string = '';
+  public state = '';
   public progress = 0;
 
   constructor(private playlistService: PlaylistService, private modalController: ModalController) { }
@@ -60,7 +60,8 @@ export class RemoveArtistComponent  implements OnInit {
     }));
 
     this.loading = false;
-    this.state = 'done'
+    this.state = 'done';
+    await this.dismiss();
   }
 
   public async dismiss() {

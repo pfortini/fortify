@@ -5,6 +5,7 @@ import { Camera, CameraResultType, CameraSource } from '@capacitor/camera';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { PlaylistService } from 'src/app/services/playlist.service';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
+import { FsService } from 'src/app/services/storage.service';
 
 @Component({
   imports: [IonicModule, CommonModule, FormsModule, ProgressIndicatorComponent],
@@ -24,7 +25,7 @@ export class NewPlaylistComponent {
   public private = false;
   public collaborative = false;
 
-  constructor(private modalController: ModalController, private playlistService: PlaylistService) { }
+  constructor(private modalController: ModalController, private playlistService: PlaylistService, public fsService: FsService) { }
 
   public async close(data:any, role: string) {
     await this.modalController.dismiss(data, role);
@@ -50,7 +51,7 @@ export class NewPlaylistComponent {
   public async createPlaylist() {
     this.loading = true;
 
-    const newPlaylist: any = await this.playlistService.createPlaylist({
+    const { newPlaylist, error }: any = await this.playlistService.createPlaylist({
       name: this.title,
       description: this.description,
       public: !this.private,
@@ -61,6 +62,7 @@ export class NewPlaylistComponent {
     this.progress = 1;
     this.loading = false;
 
-    await this.close(newPlaylist, 'done');
+    if (!error) await this.close(newPlaylist, 'done');
+    else await this.close(newPlaylist, 'done_with_errors');
   }
 }

@@ -1,4 +1,51 @@
-<ion-card *ngIf="!loading">
+<ion-card *ngIf="!loading" [ngClass]="{'ion-hide': fsService.platform != 'mobile'}">
+  <ion-card-header>
+    <ion-title class="ion-margin-top">Criar Nova Playlist</ion-title>
+  </ion-card-header>
+  <ion-card-content class="scrollable-card">
+    <ion-item lines="none">
+      <ion-grid class="full-width">
+        <ion-row class="ion-justify-content-center">
+          <div class="img-div ion-margin-bottom">
+            <img *ngIf="!coverImage" class="cover-img-div" src="../../../assets/icon/playlist_cover.png" (click)="uploadCoverImage()">
+          </div>
+        </ion-row>
+        <ion-row>
+          <ion-item lines="none">
+            <ion-input [(ngModel)]="title" label="Nome da Playlist" label-placement="stacked"></ion-input>
+          </ion-item>
+          <ion-item lines="none">
+            <ion-textarea
+              [(ngModel)]="description"
+              [autoGrow]="true"
+              label="Entre com uma descrição (opcional)"
+              label-placement="stacked">
+            </ion-textarea>
+          </ion-item>
+        </ion-row>
+      </ion-grid>
+    </ion-item>
+    <ion-item lines="none" class="col-fit-content">
+      <ion-checkbox (ionChange)="safetyToggle()" [(ngModel)]="private" labelPlacement="end">Playlist privada</ion-checkbox>
+    </ion-item>
+    <ion-item lines="none" class="col-fit-content">
+      <ion-checkbox (ionChange)="safetyToggle()" [disabled]="!private" [(ngModel)]="collaborative" labelPlacement="end">Playlist colaborativa</ion-checkbox>
+    </ion-item>
+  </ion-card-content>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button shape="round" (click)="close('', 'cancel')">
+        <ion-label>Cancelar</ion-label>
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="end">
+      <ion-button shape="round" (click)="createPlaylist()">
+        <ion-label>Salvar</ion-label>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-card>
+<ion-card *ngIf="!loading" [ngClass]="{'ion-hide': fsService.platform != 'desktop'}">
   <ion-card-header>
     <ion-title class="ion-margin-top">Criar Nova Playlist</ion-title>
   </ion-card-header>
@@ -22,11 +69,11 @@
           <div class="height-150 full-width">
             <ion-item>
               <ion-textarea
-              [(ngModel)]="description"
-              [autoGrow]="true"
-              label="Entre com uma descrição (opcional)"
-              label-placement="stacked">
-            </ion-textarea>
+                [(ngModel)]="description"
+                [autoGrow]="true"
+                label="Entre com uma descrição (opcional)"
+                label-placement="stacked">
+              </ion-textarea>
             </ion-item>
           </div>
         </ion-row>

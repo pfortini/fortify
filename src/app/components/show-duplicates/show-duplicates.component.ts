@@ -4,6 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ModalController } from '@ionic/angular';
 import { PlaylistService } from 'src/app/services/playlist.service';
 import { ProgressIndicatorComponent } from '../progress-indicator/progress-indicator.component';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
+import { StatusModalComponent } from '../status-modal/status-modal.component';
+import { sleep } from 'src/app/tools';
 
 @Component({
   imports: [IonicModule, CommonModule, FormsModule, ProgressIndicatorComponent],
@@ -13,10 +16,10 @@ import { ProgressIndicatorComponent } from '../progress-indicator/progress-indic
   standalone: true
 })
 export class ShowDuplicatesComponent  implements OnInit {
-  @Input() playlistId: string = '';
-  @Input() snapshotId: string = '';
+  @Input() playlistId = '';
+  @Input() snapshotId = '';
 
-  public state: string = '';
+  public state = '';
   public loading = false;
   public progress = 0;
 
@@ -25,7 +28,11 @@ export class ShowDuplicatesComponent  implements OnInit {
 
   public toDelete: any = [];
 
-  constructor(private playlistService: PlaylistService, private modalController: ModalController) { }
+  private statusModal: StatusModalComponent
+
+  constructor(private playlistService: PlaylistService, private modalController: ModalController, private sharedModule: SharedModule) {
+    this.statusModal = this.sharedModule.statusModalComponent();
+  }
 
   async ngOnInit() {
     this.state = 'init';
@@ -37,18 +44,21 @@ export class ShowDuplicatesComponent  implements OnInit {
       track.track.position = i;
 
       if (acc[track.track.name]) {
-        acc[track.track.name].tracks.push(track.track)
-        acc[track.track.name].count++
-      } else {
-        acc[track.track.name] = { tracks: [track.track], count: 1 }
-      }
+        acc[track.track.name].tracks.push(track.track);
+        acc[track.track.name].count++;
+      } else acc[track.track.name] = { tracks: [track.track], count: 1 };
 
       return acc;
     }, {})).forEach((trackObj: any) => {
-      if (trackObj.count > 1) this.duplicates.push(...trackObj.tracks)
-    })
+      if (trackObj.count > 1) this.duplicates.push(...trackObj.tracks);
+    });
 
     this.loading = false;
+
+    if (this.duplicates.length == 0) {
+      await this.dismiss('', 'nothing');
+      await this.statusModal.success('Sua playlist não contém músicas duplicadas!');
+    }
   }
 
   public markDelete() {

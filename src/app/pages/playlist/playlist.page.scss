@@ -1,3 +1,16 @@
+.playlist-cover-img-mobile {
+  height: 60px;
+  width: 60px;
+  overflow: hidden;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+}
+
+.artist-label-mobile {
+  font-size: 14px;
+}
+
 .playlist-cover-img {
   height: 230px;
   max-width: 232px;

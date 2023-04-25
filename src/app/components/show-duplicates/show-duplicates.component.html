@@ -1,14 +1,15 @@
 <app-progress-indicator *ngIf="loading && state == 'init'" [message]="'Carregando informações da playlist...'" [showProgress]="true" [progress]="progress"></app-progress-indicator>
+
 <ion-card *ngIf="!loading && duplicates?.length > 0">
   <ion-card-header>
     <ion-title text-wrap>Músicas duplicadas:</ion-title>
   </ion-card-header>
   <ion-card-content class="scrollable-card">
-    <ion-item lines="none" *ngFor="let track of duplicates">
-      <div class="square-75 display-grid align-content-center ion-justify-content-center overflow-hidden margin-end">
-        <img src="{{ track.album.images[0]?.url }}" />
-      </div>
-      <ion-checkbox [(ngModel)]="track.toDelete" (ionChange)="markDelete()" labelPlacement="start" justify="space-between">{{ track.name }}</ion-checkbox>
+    <ion-item lines="none" *ngFor="let track of duplicates" class="margin-bottom">
+      <ion-checkbox [(ngModel)]="track.toDelete" (ionChange)="markDelete()">
+        <div class="checkbox-img-div"><img src="{{ track.album.images[0]?.url }}" /></div>
+        <div class="checkbox-label-div">{{ track?.name }}</div>
+      </ion-checkbox>
     </ion-item>
   </ion-card-content>
   <div class="fab-height">
@@ -18,20 +19,6 @@
       </ion-fab-button>
     </ion-fab>
   </div>
-</ion-card>
-
-<ion-card *ngIf="!loading && duplicates?.length == 0">
-  <ion-card-content class="display-grid">
-    <object class="ion-margin-vertical justify-self-center" data="../../../assets/success.svg"></object>
-    <ion-title text-wrap class="ion-text-center ion-margin-vertical">Sua playlist não contém músicas duplicadas!</ion-title>
-    <ion-item lines="none">
-      <ion-buttons slot="end">
-        <ion-button shape="round" color="success" fill="solid" (click)="dismiss('', 'nothing')">
-          <ion-label>Fechar</ion-label>
-        </ion-button>
-      </ion-buttons>
-    </ion-item>
-  </ion-card-content>
 </ion-card>
 
 <app-progress-indicator *ngIf="loading && state == 'deleting'" [message]="'Removendo músicas da playlist...'" [showProgress]="true" [progress]="progress"></app-progress-indicator>

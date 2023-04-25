@@ -5,17 +5,130 @@
         <ion-icon name="chevron-back"></ion-icon>
       </ion-button>
     </ion-buttons>
-    <ion-title>Informações da Playlist</ion-title>
+    <ion-label text-wrap class="ion-text-center title-mobile display-block full-width">Informações da Playlist</ion-label>
+    <ion-buttons slot="end">
+      <ion-button shape="round" href="/home">
+        <ion-icon name=""></ion-icon>
+      </ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content>
+<ion-content *ngIf="fsService.platform == 'mobile'">
+  <ion-card>
+    <ion-card-header class="display-grid ion-justify-content-center no-padding-bottom">
+      <ion-item lines="none">
+        <ion-grid>
+          <ion-row class="display-grid ion-justify-content-center">
+            <ion-col>
+              <div class="playlist-cover-big">
+                <img *ngIf="playlist?.images[0]?.url" src="{{ playlist?.images[0]?.url }}" />
+                <img class="playlist-cover-img" *ngIf="!playlist?.images[0]?.url" src="../../../assets//icon/playlist_cover.png" />
+              </div>
+            </ion-col>
+          </ion-row>
+          <ion-row class="display-grid ion-justify-content-center">
+            <ion-col>
+              <ion-label class="title-mobile" text-wrap>{{ playlist?.name }}</ion-label>
+              <ion-label text-wrap>{{ playlist?.description }}</ion-label>
+              <ion-label text-wrap>Uma playlist de {{ playlist?.owner.display_name }}</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none">
+        <ion-grid>
+          <ion-row *ngIf="playlist?.tracks.total == 0">
+            <ion-col>
+              <ion-icon name="warning-outline" slot="start" color="warning"></ion-icon>
+              <ion-label text-wrap>Essa playlist ainda não tem músicas</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="tracks?.length > 0">
+            <ion-col>
+              <ion-label class="margin-vertical">AÇÕES DA PLAYLIST</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="!owned && !playlist?.collaborative">
+            <ion-buttons class="display-grid full-width">
+              <ion-button shape="round" fill="solid" color="success" class="margin-bottom" (click)="openIncorporateModal()">
+                <ion-label>Incorporar Playlist</ion-label>
+                <ion-icon name="duplicate-outline" slot="start"></ion-icon>
+              </ion-button>
+              <ion-button shape="round" fill="solid" color="danger" class="margin-bottom" (click)="openDislikeModal()">
+                <ion-label>Deixar de seguir</ion-label>
+                <ion-icon name="heart-dislike-outline" slot="start"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-row>
+          <ion-row *ngIf="owned || playlist?.collaborative">
+            <ion-buttons class="display-grid full-width">
+              <ion-button shape="round" fill="solid" color="success" class="margin-bottom" (click)="openAddArtistModal()">
+                <ion-label>Adicionar Músicas</ion-label>
+                <ion-icon slot="start" name="musical-notes-outline"></ion-icon>
+              </ion-button>
+              <ion-button shape="round" fill="solid" color="success" class="margin-bottom" (click)="showDuplicatesModal()">
+                <ion-label>Mostrar duplicadas</ion-label>
+                <ion-icon slot="start" name="copy-outline"></ion-icon>
+              </ion-button>
+              <ion-button shape="round" fill="solid" color="danger" class="margin-bottom" (click)="openRemoveArtistModal()">
+                <ion-label>Remover artista</ion-label>
+                <ion-icon slot="start" name="person-outline"></ion-icon>
+              </ion-button>
+              <ion-button shape="round" fill="solid" color="danger" class="margin-bottom" (click)="openRemoveAlbumModal()">
+                <ion-label>Remover álbum</ion-label>
+                <ion-icon slot="start" name="book-outline"></ion-icon>
+              </ion-button>
+            </ion-buttons>
+          </ion-row>
+          <ion-row *ngIf="playlist?.tracks.total > 0">
+            <ion-col>
+              <ion-label class="margin-vertical">MÚSICAS</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngFor="let track of tracks; let i = index">
+            <ion-col class="col-fit-content">
+              <div class="playlist-cover-img-mobile">
+                <img src="{{ track.track.album.images[0].url }}" />
+              </div>
+            </ion-col>
+            <ion-col class="display-grid align-content-center">
+              <ion-label text-wrap>{{ track.track.name }}</ion-label>
+              <ion-label class="artist-label-mobile" text-wrap>{{ track.track.artists[0].name }}{{ track.track.artists[1]?.name ? ', ' + track.track.artists[1]?.name : '' }}</ion-label>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="!loading && tracks?.length < playlist?.tracks.total">
+            <ion-col>
+              <ion-buttons class="display-grid full-width big-margin-top">
+                <ion-button shape="round" fill="solid" color="success" class="margin-bottom" (click)="loadMoreTracks()">
+                  <ion-label>Carregar mais músicas</ion-label>
+                </ion-button>
+                <ion-button shape="round" fill="solid" color="success" class="margin-bottom" (click)="loadAllTracks()">
+                  <ion-label>Carregar todas músicas</ion-label>
+                </ion-button>
+              </ion-buttons>
+            </ion-col>
+          </ion-row>
+          <ion-row *ngIf="loading">
+            <ion-col class="display-grid">
+              <ion-spinner name="crescent" class="margin-vertical justify-self-center"></ion-spinner>
+              <ion-label>Carregando músicas da playlist</ion-label>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </ion-item>
+    </ion-card-content>
+  </ion-card>
+</ion-content>
+<ion-content *ngIf="fsService.platform == 'desktop'">
   <ion-card>
     <ion-card-header class="display-grid ion-justify-content-start">
       <ion-item lines="none">
         <ion-grid class="no-padding-start">
           <ion-row size="auto">
-            <ion-col class="display-grid no-padding-start">
+            <ion-col class="display-grid no-padding-start col-fit-content">
               <div class="playlist-cover-big">
                 <img *ngIf="playlist?.images[0]?.url" src="{{ playlist?.images[0]?.url }}" />
                 <img class="playlist-cover-img" *ngIf="!playlist?.images[0]?.url" src="../../../assets//icon/playlist_cover.png" />
@@ -38,7 +151,40 @@
       <ion-item lines="full" *ngIf="tracks?.length > 0">
         <ion-label>AÇÕES DA PLAYLIST</ion-label>
       </ion-item>
-      <ion-item lines="none">
+      <ion-item lines="none" *ngIf="!owned && !playlist?.collaborative">
+        <ion-grid class="display-flex">
+          <ion-col class="col-fit-content">
+            <ion-row>
+              <ion-item lines="none" class="full-width">
+                <ion-buttons class="full-width">
+                  <ion-button
+                    class="full-width"
+                    shape="round"
+                    fill="solid"
+                    color="success"
+                    (click)="openIncorporateModal()">
+                    <ion-icon slot="start" name="duplicate-outline"></ion-icon>
+                    <ion-label>Incorporar playlist</ion-label>
+                  </ion-button>
+                </ion-buttons>
+              </ion-item>
+            </ion-row>
+          </ion-col>
+          <ion-col class="col-fit-content">
+            <ion-row>
+              <ion-item lines="none" class="full-width">
+                <ion-buttons class="full-width">
+                  <ion-button class="full-width" shape="round" fill="solid" color="danger" (click)="openDislikeModal()">
+                    <ion-icon slot="start" name="heart-dislike-outline"></ion-icon>
+                    <ion-label>Deixar de seguir</ion-label>
+                  </ion-button>
+                </ion-buttons>
+              </ion-item>
+            </ion-row>
+          </ion-col>
+        </ion-grid>
+      </ion-item>
+      <ion-item lines="none" *ngIf="owned">
         <ion-grid class="display-flex">
           <ion-col class="col-fit-content">
             <ion-row>
@@ -81,7 +227,7 @@
             <ion-row>
               <ion-item lines="none" class="full-width">
                 <ion-buttons class="full-width">
-                  <ion-button class="full-width" shape="round" fill="solid" color="danger">
+                  <ion-button class="full-width" shape="round" fill="solid" color="danger" (click)="openRemoveAlbumModal()">
                     <ion-icon slot="start" name="book-outline"></ion-icon>
                     <ion-label>Remover Álbum</ion-label>
                   </ion-button>
@@ -119,7 +265,7 @@
             </ion-col>
             <ion-col class="display-grid ion-justify-content-start align-content-center">
               <ion-label text-wrap>{{ track.track.name }}</ion-label>
-              <ion-label text-wrap>{{ track.track.artists[0].name }}</ion-label>
+              <ion-label text-wrap>{{ track.track.artists[0].name }}{{ track.track.artists[1]?.name ? ', ' + track.track.artists[1]?.name : '' }}</ion-label>
             </ion-col>
             <ion-col class="display-grid ion-justify-content-start align-content-center">
               <ion-label text-wrap>{{ track.track.album.name }}</ion-label>
@@ -140,7 +286,7 @@
           </ion-button>
         </ion-buttons>
       </ion-item>
-      <ion-item lines="none" class="ion-margin-top" *ngIf="playlist?.tracks.total > 0 && (tracks?.length == 0 || loading)">
+      <ion-item lines="none" class="ion-margin-top" *ngIf="loading">
         <ion-spinner name="crescent"></ion-spinner>
         <ion-label class="ion-margin-start">Carregando músicas da playlist</ion-label>
       </ion-item>
