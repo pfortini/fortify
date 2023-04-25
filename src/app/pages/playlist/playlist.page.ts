@@ -8,7 +8,6 @@ import { AddArtistComponent } from 'src/app/components/add-artist/add-artist.com
 import { RemoveArtistComponent } from 'src/app/components/remove-artist/remove-artist.component';
 import { ShowDuplicatesComponent } from 'src/app/components/show-duplicates/show-duplicates.component';
 import { StatusModalComponent } from 'src/app/components/status-modal/status-modal.component';
-import { SearchService } from 'src/app/services/search.service';
 import { RemoveAlbumComponent } from 'src/app/components/remove-album/remove-album.component';
 import { FsService } from 'src/app/services/storage.service';
 
@@ -29,8 +28,7 @@ export class PlaylistPage implements OnInit {
   public owned = false;
 
   constructor(private perfilService: PerfilService, private playlistService: PlaylistService,
-    private modalController: ModalController, private statusModal: StatusModalComponent,
-    private searchService: SearchService, public fsService: FsService
+    private modalController: ModalController, private statusModal: StatusModalComponent, public fsService: FsService
   ) { }
 
   async ngOnInit() {
@@ -53,8 +51,6 @@ export class PlaylistPage implements OnInit {
     this.tracks.push(...this.playlist.tracks.items);
 
     this.loading = false;
-
-    await this.openRemoveAlbumModal();
   }
 
   public htmlDecode(str: string) {
