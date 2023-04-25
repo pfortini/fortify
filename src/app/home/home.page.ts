@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonicModule, MenuController, ModalController } from '@ionic/angular';
 import { LoginService } from '../services/login.service';
 import { CommonModule } from '@angular/common';
 import { PerfilService } from '../services/perfil.service';
@@ -20,7 +20,8 @@ import { FsService } from '../services/storage.service';
 export class HomePage {
   constructor(
       public loginService: LoginService, public perfilService: PerfilService, private router: Router,
-      private modalController: ModalController, private statusModal: StatusModalComponent, public fsService: FsService
+      private modalController: ModalController, private statusModal: StatusModalComponent, public fsService: FsService,
+      private menu: MenuController
     ) {}
 
   async ionViewWillEnter() {
@@ -65,7 +66,18 @@ export class HomePage {
     }
   }
 
-  public async redirectLogin() {
-    return window.location.assign(this.loginService.spotifyLoginUrl);
+  public async navigate(url: string) {
+    await this.menu.close();
+    return await this.router.navigate([url]);
+  }
+
+  public async login() {
+    return this.loginService.login();
+  }
+
+  public async logout() {
+    await this.statusModal.success('Até a próxima!');
+    await this.menu.close();
+    await this.loginService.logout();
   }
 }
