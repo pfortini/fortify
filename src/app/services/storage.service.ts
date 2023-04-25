@@ -1,15 +1,27 @@
 import { Injectable } from '@angular/core';
-import { Filesystem, Directory, Encoding } from '@capacitor/filesystem';
-import { environment } from '../../environments/environment';
+import { Filesystem, Encoding } from '@capacitor/filesystem';
+import { Platform } from '@ionic/angular';
 
 @Injectable({ providedIn: 'root' })
 export class FsService {
-  constructor() { }
+  public platform: 'mobile'|'desktop';
+
+  private storageLocation: any;
+
+  constructor(private platformService: Platform) {
+    if (this.platformService.platforms().includes('mobile')) {
+      this.platform = 'mobile';
+      this.storageLocation = 'External';
+    } else {
+      this.platform = 'desktop';
+      this.storageLocation = 'Documents';
+    }
+  }
 
   async writeFile(fileName: string, data: string) {
     return Filesystem.writeFile({
       path: fileName,
-      directory: Directory[environment.storageLocation],
+      directory: this.storageLocation,
       encoding: Encoding.UTF8,
       data
     });
@@ -18,7 +30,7 @@ export class FsService {
   async readFile(fileName: string) {
     return Filesystem.readFile({
       path: fileName,
-      directory: Directory[environment.storageLocation],
+      directory: this.storageLocation,
       encoding: Encoding.UTF8
     });
   }
@@ -26,7 +38,7 @@ export class FsService {
   async deleteFile(fileName: string) {
     return Filesystem.deleteFile({
       path: fileName,
-      directory: Directory[environment.storageLocation]
+      directory: this.storageLocation
     });
   }
 

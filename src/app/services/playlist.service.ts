@@ -2,6 +2,8 @@ import { Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { queryString, sleep } from '../tools';
 import { PerfilService } from './perfil.service';
+import { SharedModule } from '../modules/shared/shared.module';
+import { StatusModalComponent } from '../components/status-modal/status-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -9,8 +11,11 @@ import { PerfilService } from './perfil.service';
 export class PlaylistService {
   private _isReady = false;
 
-  constructor(private httpService: HttpService, private perfilService: PerfilService) {
+  private statusModal: StatusModalComponent
+
+  constructor(private httpService: HttpService, private perfilService: PerfilService, private sharedModule: SharedModule) {
     this.init();
+    this.statusModal = this.sharedModule.statusModalComponent();
   }
 
   private async init() {
@@ -35,11 +40,18 @@ export class PlaylistService {
       }
     );
 
+    let error = false;
     try {
       await this.httpService.put(`https://api.spotify.com/v1/playlists/${newPlaylist.id}/images`, coverImage);
-    } catch (e) { console.log(e); }
+    } catch (e) {
+      error = true;
+      await this.statusModal.warning(
+        'Algo deu errado',
+        'Sua playlist foi criada, mas não foi possível definir a imagem de capa escolhida. Tente mais tarde ou pelo cliente oficial Spotify'
+      );
+    }
 
-    return newPlaylist;
+    return { newPlaylist, error };
   }
 
   async addToPlaylist(playlistId: string, items: any, noLive: boolean, noRemix: boolean) {
@@ -93,6 +105,21 @@ export class PlaylistService {
     ));
 
     return { artists: Object.values(artists), allTracks };
+  }
+
+  async getPlaylistAlbums(playlistId: string) {
+    const allTracks: any = await this.getAllPlaylistTracks(playlistId);
+
+    const albums: any = [];
+    const albumsSet = new Set();
+    allTracks.forEach(track => {
+      if (!albumsSet.has(track.track.album.name)) {
+        albumsSet.add(track.track.album.name);
+        albums.push(track.track.album);
+      }
+    });
+
+    return { albums, allTracks };
   }
 
   async getAllPlaylistTracks(id: string) {

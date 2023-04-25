@@ -30,8 +30,8 @@ export class PerfilService {
         await this.loginService.refreshAccessToken();
         return await this.init();
       } else {
-        await this.statusModal.warning('Algo deu errado...', 'Recarregue a página ou tente novamente mais tarde');
         console.log(e);
+        return await this.statusModal.warning('Algo deu errado...', 'Recarregue a página ou tente novamente mais tarde');
       }
     }
 
@@ -63,7 +63,12 @@ export class PerfilService {
     for (let i = 0; i < playlistsOwned.length; i += 5) gridPlaylistsOwned.push(playlistsOwned.slice(i, i + 5));
     for (let i = 0; i < playlistsLiked.length; i += 5) gridPlaylistsLiked.push(playlistsLiked.slice(i, i + 5));
 
-    this.perfil.playlists = { owned: gridPlaylistsOwned, liked: gridPlaylistsLiked };
+    this.perfil.playlists = {
+      owned: gridPlaylistsOwned,
+      _owned: playlistsOwned,
+      liked: gridPlaylistsLiked,
+      _liked: playlistsLiked
+    };
     return this.perfil.playlists;
   }
 }

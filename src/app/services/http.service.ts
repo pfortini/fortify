@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { lastValueFrom } from 'rxjs';
 import { Router } from '@angular/router';
 import { generateRandomString, queryString } from '../tools';
-import { StatusModalComponent } from '../components/status-modal/status-modal.component';
 import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
@@ -83,7 +82,7 @@ export class HttpService {
 
   private async handleError(res: any) {
     // not logged in
-    if (res.error.error?.status == 401 && res.error.error?.message == 'No token provided') return window.location.assign(this.spotifyLoginUrl);
+    if (res.error.error?.status == 401 && res.error.error?.message == 'No token provided') return this.router.navigate(['/home']);
     else if (res.error.error?.status == 401 && res.error.error?.message == 'The access token expired') throw res.error.error;
     else if (res.status >= 300) throw res.status;
     throw res;

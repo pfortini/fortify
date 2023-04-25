@@ -38,7 +38,7 @@ export class LoginService {
       this.httpService.setKey(this.accessToken.access_token);
     }
 
-    this._isReady = true;
+    this._isReady = this.accessCode && this.accessToken;
   }
 
   async isReady() {
@@ -46,8 +46,6 @@ export class LoginService {
   }
 
   async getAccessToken() {
-    while (!this._isReady) await sleep(50);
-
     if (!this.accessCode) throw 'no access code';
     if (this.accessToken) return this.accessToken.access_token;
 
@@ -64,6 +62,8 @@ export class LoginService {
     this.accessToken = accessToken;
     await this.jsonService.writeJSON('access_token.json', accessToken);
     this.httpService.setKey(this.accessToken.access_token);
+
+    await this.init();
 
     return this.accessToken;
   }
@@ -85,12 +85,12 @@ export class LoginService {
   }
 
   async getAccessCode() {
-    if (this.accessCode) return this.accessCode;
-    window.location.assign(this.spotifyLoginUrl);
+    return this.accessCode;
   }
 
   async setAccessCode(code: string) {
     this.accessCode = code;
     await this.jsonService.writeJSON('access_code.json', code);
+    await this.init();
   }
 }
